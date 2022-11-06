@@ -1,0 +1,748 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "8ca99028",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "from sklearn import linear_model\n",
+    "from word2number import w2n\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "5d3801ef",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>experience</th>\n",
+       "      <th>test_score(out of 10)</th>\n",
+       "      <th>interview_score(out of 10)</th>\n",
+       "      <th>salary($)</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>NaN</td>\n",
+       "      <td>8.0</td>\n",
+       "      <td>9</td>\n",
+       "      <td>50000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>NaN</td>\n",
+       "      <td>8.0</td>\n",
+       "      <td>6</td>\n",
+       "      <td>45000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>five</td>\n",
+       "      <td>6.0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>60000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>two</td>\n",
+       "      <td>10.0</td>\n",
+       "      <td>10</td>\n",
+       "      <td>65000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>seven</td>\n",
+       "      <td>9.0</td>\n",
+       "      <td>6</td>\n",
+       "      <td>70000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>three</td>\n",
+       "      <td>7.0</td>\n",
+       "      <td>10</td>\n",
+       "      <td>62000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>6</th>\n",
+       "      <td>ten</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>7</td>\n",
+       "      <td>72000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>7</th>\n",
+       "      <td>eleven</td>\n",
+       "      <td>7.0</td>\n",
+       "      <td>8</td>\n",
+       "      <td>80000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "  experience  test_score(out of 10)  interview_score(out of 10)  salary($)\n",
+       "0        NaN                    8.0                           9      50000\n",
+       "1        NaN                    8.0                           6      45000\n",
+       "2       five                    6.0                           7      60000\n",
+       "3        two                   10.0                          10      65000\n",
+       "4      seven                    9.0                           6      70000\n",
+       "5      three                    7.0                          10      62000\n",
+       "6        ten                    NaN                           7      72000\n",
+       "7     eleven                    7.0                           8      80000"
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "dp = pd.read_csv('/Users/niyasop/Desktop/hiring.csv')\n",
+    "dp\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "3a516bdd",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>experience</th>\n",
+       "      <th>test_score(out of 10)</th>\n",
+       "      <th>interview_score(out of 10)</th>\n",
+       "      <th>salary($)</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>zero</td>\n",
+       "      <td>8.0</td>\n",
+       "      <td>9</td>\n",
+       "      <td>50000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>zero</td>\n",
+       "      <td>8.0</td>\n",
+       "      <td>6</td>\n",
+       "      <td>45000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>five</td>\n",
+       "      <td>6.0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>60000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>two</td>\n",
+       "      <td>10.0</td>\n",
+       "      <td>10</td>\n",
+       "      <td>65000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>seven</td>\n",
+       "      <td>9.0</td>\n",
+       "      <td>6</td>\n",
+       "      <td>70000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>three</td>\n",
+       "      <td>7.0</td>\n",
+       "      <td>10</td>\n",
+       "      <td>62000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>6</th>\n",
+       "      <td>ten</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>7</td>\n",
+       "      <td>72000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>7</th>\n",
+       "      <td>eleven</td>\n",
+       "      <td>7.0</td>\n",
+       "      <td>8</td>\n",
+       "      <td>80000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "  experience  test_score(out of 10)  interview_score(out of 10)  salary($)\n",
+       "0       zero                    8.0                           9      50000\n",
+       "1       zero                    8.0                           6      45000\n",
+       "2       five                    6.0                           7      60000\n",
+       "3        two                   10.0                          10      65000\n",
+       "4      seven                    9.0                           6      70000\n",
+       "5      three                    7.0                          10      62000\n",
+       "6        ten                    NaN                           7      72000\n",
+       "7     eleven                    7.0                           8      80000"
+      ]
+     },
+     "execution_count": 15,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "dp.experience=dp.experience.fillna('zero')\n",
+    "dp"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "id": "db58ca5e",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>experience</th>\n",
+       "      <th>test_score(out of 10)</th>\n",
+       "      <th>interview_score(out of 10)</th>\n",
+       "      <th>salary($)</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>zero</td>\n",
+       "      <td>8.0</td>\n",
+       "      <td>9</td>\n",
+       "      <td>50000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>zero</td>\n",
+       "      <td>8.0</td>\n",
+       "      <td>6</td>\n",
+       "      <td>45000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>five</td>\n",
+       "      <td>6.0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>60000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>two</td>\n",
+       "      <td>10.0</td>\n",
+       "      <td>10</td>\n",
+       "      <td>65000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>seven</td>\n",
+       "      <td>9.0</td>\n",
+       "      <td>6</td>\n",
+       "      <td>70000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>three</td>\n",
+       "      <td>7.0</td>\n",
+       "      <td>10</td>\n",
+       "      <td>62000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>6</th>\n",
+       "      <td>ten</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>7</td>\n",
+       "      <td>72000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>7</th>\n",
+       "      <td>eleven</td>\n",
+       "      <td>7.0</td>\n",
+       "      <td>8</td>\n",
+       "      <td>80000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "  experience  test_score(out of 10)  interview_score(out of 10)  salary($)\n",
+       "0       zero                    8.0                           9      50000\n",
+       "1       zero                    8.0                           6      45000\n",
+       "2       five                    6.0                           7      60000\n",
+       "3        two                   10.0                          10      65000\n",
+       "4      seven                    9.0                           6      70000\n",
+       "5      three                    7.0                          10      62000\n",
+       "6        ten                    NaN                           7      72000\n",
+       "7     eleven                    7.0                           8      80000"
+      ]
+     },
+     "execution_count": 18,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "dp.experience = dp.experience.fillna(\"zero\")\n",
+    "dp\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "id": "fb029448",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>experience</th>\n",
+       "      <th>test_score(out of 10)</th>\n",
+       "      <th>interview_score(out of 10)</th>\n",
+       "      <th>salary($)</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>0</td>\n",
+       "      <td>8.0</td>\n",
+       "      <td>9</td>\n",
+       "      <td>50000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>0</td>\n",
+       "      <td>8.0</td>\n",
+       "      <td>6</td>\n",
+       "      <td>45000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>5</td>\n",
+       "      <td>6.0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>60000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>2</td>\n",
+       "      <td>10.0</td>\n",
+       "      <td>10</td>\n",
+       "      <td>65000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>7</td>\n",
+       "      <td>9.0</td>\n",
+       "      <td>6</td>\n",
+       "      <td>70000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>3</td>\n",
+       "      <td>7.0</td>\n",
+       "      <td>10</td>\n",
+       "      <td>62000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>6</th>\n",
+       "      <td>10</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>7</td>\n",
+       "      <td>72000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>7</th>\n",
+       "      <td>11</td>\n",
+       "      <td>7.0</td>\n",
+       "      <td>8</td>\n",
+       "      <td>80000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   experience  test_score(out of 10)  interview_score(out of 10)  salary($)\n",
+       "0           0                    8.0                           9      50000\n",
+       "1           0                    8.0                           6      45000\n",
+       "2           5                    6.0                           7      60000\n",
+       "3           2                   10.0                          10      65000\n",
+       "4           7                    9.0                           6      70000\n",
+       "5           3                    7.0                          10      62000\n",
+       "6          10                    NaN                           7      72000\n",
+       "7          11                    7.0                           8      80000"
+      ]
+     },
+     "execution_count": 19,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "dp.experience = dp.experience.apply(w2n.word_to_num)\n",
+    "dp"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "id": "d2de06ad",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "7.857142857142857"
+      ]
+     },
+     "execution_count": 20,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "dp['test_score(out of 10)'].mean()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b8ed79e0",
+   "metadata": {},
+   "source": [
+    "import math"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "id": "7fffb4ae",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "7"
+      ]
+     },
+     "execution_count": 24,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import math\n",
+    "median_test_score = math.floor(dp['test_score(out of 10)'].mean())\n",
+    "median_test_score"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "id": "c22c0080",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>experience</th>\n",
+       "      <th>test_score(out of 10)</th>\n",
+       "      <th>interview_score(out of 10)</th>\n",
+       "      <th>salary($)</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>0</td>\n",
+       "      <td>8.0</td>\n",
+       "      <td>9</td>\n",
+       "      <td>50000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>0</td>\n",
+       "      <td>8.0</td>\n",
+       "      <td>6</td>\n",
+       "      <td>45000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>5</td>\n",
+       "      <td>6.0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>60000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>2</td>\n",
+       "      <td>10.0</td>\n",
+       "      <td>10</td>\n",
+       "      <td>65000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>7</td>\n",
+       "      <td>9.0</td>\n",
+       "      <td>6</td>\n",
+       "      <td>70000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>3</td>\n",
+       "      <td>7.0</td>\n",
+       "      <td>10</td>\n",
+       "      <td>62000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>6</th>\n",
+       "      <td>10</td>\n",
+       "      <td>7.0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>72000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>7</th>\n",
+       "      <td>11</td>\n",
+       "      <td>7.0</td>\n",
+       "      <td>8</td>\n",
+       "      <td>80000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   experience  test_score(out of 10)  interview_score(out of 10)  salary($)\n",
+       "0           0                    8.0                           9      50000\n",
+       "1           0                    8.0                           6      45000\n",
+       "2           5                    6.0                           7      60000\n",
+       "3           2                   10.0                          10      65000\n",
+       "4           7                    9.0                           6      70000\n",
+       "5           3                    7.0                          10      62000\n",
+       "6          10                    7.0                           7      72000\n",
+       "7          11                    7.0                           8      80000"
+      ]
+     },
+     "execution_count": 27,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "dp['test_score(out of 10)']=dp['test_score(out of 10)'].fillna(median_test_score)\n",
+    "dp"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 45,
+   "id": "69dacb44",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "LinearRegression()"
+      ]
+     },
+     "execution_count": 45,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "reg=linear_model.LinearRegression()\n",
+    "reg.fit(dp[['experience','test_score(out of 10)','interview_score(out of 10)','salary($)']],dp['salary($)'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 46,
+   "id": "b61e8e5a",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0.0"
+      ]
+     },
+     "execution_count": 46,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "reg.intercept_"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 56,
+   "id": "f0cc4901",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "ValueError",
+     "evalue": "matmul: Input operand 1 has a mismatch in its core dimension 0, with gufunc signature (n?,k),(k,m?)->(n?,m?) (size 4 is different from 1)",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mValueError\u001b[0m                                Traceback (most recent call last)",
+      "\u001b[0;32m/var/folders/sg/ppyqlz8535l401g8kmw7lst40000gn/T/ipykernel_23686/307909410.py\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0mreg\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mpredict\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;36m14\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;36m53\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
+      "\u001b[0;32m~/opt/anaconda3/lib/python3.9/site-packages/sklearn/linear_model/_base.py\u001b[0m in \u001b[0;36mpredict\u001b[0;34m(self, X)\u001b[0m\n\u001b[1;32m    236\u001b[0m             \u001b[0mReturns\u001b[0m \u001b[0mpredicted\u001b[0m \u001b[0mvalues\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    237\u001b[0m         \"\"\"\n\u001b[0;32m--> 238\u001b[0;31m         \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_decision_function\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mX\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    239\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    240\u001b[0m     \u001b[0m_preprocess_data\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mstaticmethod\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0m_preprocess_data\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m~/opt/anaconda3/lib/python3.9/site-packages/sklearn/linear_model/_base.py\u001b[0m in \u001b[0;36m_decision_function\u001b[0;34m(self, X)\u001b[0m\n\u001b[1;32m    219\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    220\u001b[0m         \u001b[0mX\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mcheck_array\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mX\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0maccept_sparse\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;34m'csr'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m'csc'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m'coo'\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 221\u001b[0;31m         return safe_sparse_dot(X, self.coef_.T,\n\u001b[0m\u001b[1;32m    222\u001b[0m                                dense_output=True) + self.intercept_\n\u001b[1;32m    223\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m~/opt/anaconda3/lib/python3.9/site-packages/sklearn/utils/validation.py\u001b[0m in \u001b[0;36minner_f\u001b[0;34m(*args, **kwargs)\u001b[0m\n\u001b[1;32m     61\u001b[0m             \u001b[0mextra_args\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mlen\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0margs\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;34m-\u001b[0m \u001b[0mlen\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mall_args\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     62\u001b[0m             \u001b[0;32mif\u001b[0m \u001b[0mextra_args\u001b[0m \u001b[0;34m<=\u001b[0m \u001b[0;36m0\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 63\u001b[0;31m                 \u001b[0;32mreturn\u001b[0m \u001b[0mf\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0margs\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m**\u001b[0m\u001b[0mkwargs\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     64\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     65\u001b[0m             \u001b[0;31m# extra_args > 0\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m~/opt/anaconda3/lib/python3.9/site-packages/sklearn/utils/extmath.py\u001b[0m in \u001b[0;36msafe_sparse_dot\u001b[0;34m(a, b, dense_output)\u001b[0m\n\u001b[1;32m    150\u001b[0m             \u001b[0mret\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mnp\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdot\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0ma\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mb\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    151\u001b[0m     \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 152\u001b[0;31m         \u001b[0mret\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0ma\u001b[0m \u001b[0;34m@\u001b[0m \u001b[0mb\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    153\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    154\u001b[0m     if (sparse.issparse(a) and sparse.issparse(b)\n",
+      "\u001b[0;31mValueError\u001b[0m: matmul: Input operand 1 has a mismatch in its core dimension 0, with gufunc signature (n?,k),(k,m?)->(n?,m?) (size 4 is different from 1)"
+     ]
+    }
+   ],
+   "source": [
+    "reg.predict([[14],[53]])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b19d8c21",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.7"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
